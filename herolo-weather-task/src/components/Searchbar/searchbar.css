@@ -7,3 +7,14 @@
     white-space: nowrap;
     width: 1px;
 }
+input {
+    border-radius: 25px;
+    width: 90%;
+}
+
+.searchbar-form {
+    text-align: center;
+    display: flex    ;
+    width: 10%;
+    margin: auto;
+}

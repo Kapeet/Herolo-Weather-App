@@ -1,0 +1,31 @@
+.suggestion {
+    padding: 2px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    margin: auto;
+}
+.suggestion-active, .suggestions li:hover {
+    background: cyan;
+    color: #212121;
+    cursor: pointer;
+    font-weight: 600;
+}
+.suggestions li {
+    color: #212121;
+    padding: 0.5rem;
+    border-radius: 25px;
+}
+
+.suggestions {
+    /* border: 1px solid #999; */
+    border-top-width: 0;
+    list-style: none;
+    margin-top: 20px;
+    max-height: 5%;
+    overflow-y: auto;
+    padding-left: 0;
+    width: 10%;
+    display: block;
+    position: absolute;
+}
