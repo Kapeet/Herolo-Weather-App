@@ -5,6 +5,7 @@ import {Homepage, Favorites} from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/navbar'
+
 ReactDOM.render(
   <BrowserRouter>
   <Navbar />

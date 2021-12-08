@@ -3,11 +3,14 @@ import {useNavigate} from 'react-router-dom'
 import './searchbar.css';
 import AutoComplete from './AutoComplete'
 let suggestions = ["Tel Aviv", "Jerusalem", "XD", "Ramat Gan", "Rishon Lezion", "Bnei Brak"];
-export default function Search({userQuery, setUserQuery}){
+export default function Search({userQuery, setUserQuery, APIdata, setAPIdata}){
     const nagivate = useNavigate();
     const onInputSubmitted = e => {
-        nagivate(`?s=${userQuery}`)
-        e.preventDefault()
+        console.log("form submitted");
+        // nagivate(`?s=${userQuery}`)
+        // e.preventDefault()
+    
+
     };
 
     const onInputFieldChanged = (newQuery) => {
@@ -26,7 +29,7 @@ export default function Search({userQuery, setUserQuery}){
                 placeholder="Tel aviv" 
                 name="q" /> */} 
 
-            <AutoComplete suggestionsProp={suggestions}/>
+            <AutoComplete suggestionsProp={suggestions} onSubmit={onInputSubmitted}/>
             <button type="submit">Search</button>
         </form>
     )

@@ -23,7 +23,7 @@ a:hover {
 }
 ul li {
     color: white;
-
+    padding: 10px;
 }
 ul {
     display: grid;
