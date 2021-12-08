@@ -29,7 +29,7 @@ export default function Search({userQuery, setUserQuery, APIdata, setAPIdata}){
                 placeholder="Tel aviv" 
                 name="q" /> */} 
 
-            <AutoComplete suggestionsProp={suggestions} onSubmit={onInputSubmitted}/>
+            <AutoComplete suggestionsProp={suggestions} onSubmit={onInputSubmitted} APIdata={APIdata} setAPIdata={setAPIdata} />
             <button type="submit">Search</button>
         </form>
     )

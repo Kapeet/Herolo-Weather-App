@@ -15,10 +15,13 @@ export function Homepage() {
     currentWeather: null,
     fiveDayForecast: null
   });
-  useEffect(() => {
-  },[]);
+  // useEffect(() => {
+  //   console.log(process.env.REACT_APP_API_KEY);
+
+  // },[]);
   return (
     <div className="App">
+      
       <Searchbar userQuery={userQuery} setUserQuery={setUserQuery} APIdata={APIdata} setAPIdata={setAPIdata}/>
     </div>
   );
