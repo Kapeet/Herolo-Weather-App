@@ -19,7 +19,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
             .then(data => {
                 let APIlocations = data.map(item => {return item.LocalizedName});
                 let APIlocationKeys = data.map(item => {return item.Key});
-                console.log(APIlocationKeys)
+
                 if (APIlocations != null)
                 {
                     setAPIdata({
@@ -28,11 +28,10 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
                         fiveDayForecast: null,
                         locationKeys: APIlocationKeys
                     });
-                    console.log(APIlocations);
-                    console.log(APIdata);
+
                     
                     let copiedFilteredSuggestions = APIlocations.filter(suggestion => suggestion.toLowerCase().indexOf(newUserInput.toLowerCase()) > -1); //filter suggestions based on user input
-                    let uniqueSuggestions = copiedFilteredSuggestions.filter((item, index) => {return copiedFilteredSuggestions.indexOf(item) == index;}); //remove duplicate suggestions from the original array
+                    let uniqueSuggestions = copiedFilteredSuggestions.filter((item, index) => {return copiedFilteredSuggestions.indexOf(item) === index;}); //remove duplicate suggestions from the original array
                     setSuggestionState({
                         activeSuggestion: 0,
                         filteredSuggestions: uniqueSuggestions,

@@ -12,7 +12,6 @@ import { useEffect, useState } from 'react';
 export function Homepage() {
   const [userQuery, setUserQuery] = useState(''); //This is what the user types in the searchbar input.
   const [isSearchFormSubmitted, setSearchFormSubmitted] = useState(false);
-  const [mainCity, setMainCity] = useState('')
   const [APIdata, setAPIdata] = useState({
     locations: [],
     currentWeather: null,
@@ -20,20 +19,13 @@ export function Homepage() {
     locationKeys: []
   });
 
-  const onInputFieldChanged = (newQuery) => {
-    setUserQuery(newQuery)
-}
-
   const onInputSubmitted = (event) => {
     console.log(event);
     event.preventDefault();
     setSearchFormSubmitted(true);
     console.log("user final query: "+userQuery);
   }
-  // useEffect(() => {
-  //   console.log(process.env.REACT_APP_API_KEY);
 
-  // },[]);
   return (
     <div className="App">
       
