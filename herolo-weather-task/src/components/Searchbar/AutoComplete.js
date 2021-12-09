@@ -1,35 +1,46 @@
 import { React, useEffect, useRef, useState } from "react"
 import './Autocomplete.css'
-export default function AutoComplete({ suggestionsProp, onSubmit, APIdata, setAPIdata}) {
+export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp, onSubmit, APIdata, setAPIdata, isSearchFormSubmitted, setSearchFormSubmitted}) {
     const suggestionListElement = useRef(null);
+
     const [suggestionState, setSuggestionState] = useState({
         activeSuggestion: 0,
         filteredSuggestions: [],
         showSuggestions: false,
         userInput: ""
     });
-    var component = null;
     const onChange = e => {
-
-        let newSuggestions = suggestionsProp;
+        setSearchFormSubmitted(false);
         let newUserInput = e.target.value;
         if (newUserInput.length > 0)
         {
             fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`)
             .then(response => response.json())
             .then(data => {
-                let locations = data.map(item => {return item.LocalizedName});
-                setAPIdata({
-                    locations: locations,
-                    ...APIdata
-                });
-                let copiedFilteredSuggestions = locations.filter(suggestion => suggestion.toLowerCase().indexOf(newUserInput.toLowerCase()) > -1);
-                setSuggestionState({
-                    activeSuggestion: 0,
-                    filteredSuggestions: copiedFilteredSuggestions,
-                    showSuggestions: true,
-                    userInput: newUserInput
-                });
+                let APIlocations = data.map(item => {return item.LocalizedName});
+                let APIlocationKeys = data.map(item => {return item.Key});
+                console.log(APIlocationKeys)
+                if (APIlocations != null)
+                {
+                    setAPIdata({
+                        locations: APIlocations,
+                        currentWeather: null,
+                        fiveDayForecast: null,
+                        locationKeys: APIlocationKeys
+                    });
+                    console.log(APIlocations);
+                    console.log(APIdata);
+                    
+                    let copiedFilteredSuggestions = APIlocations.filter(suggestion => suggestion.toLowerCase().indexOf(newUserInput.toLowerCase()) > -1); //filter suggestions based on user input
+                    let uniqueSuggestions = copiedFilteredSuggestions.filter((item, index) => {return copiedFilteredSuggestions.indexOf(item) == index;}); //remove duplicate suggestions from the original array
+                    setSuggestionState({
+                        activeSuggestion: 0,
+                        filteredSuggestions: uniqueSuggestions,
+                        showSuggestions: true,
+                        userInput: newUserInput
+                    });
+                    setUserQuery(newUserInput);
+                }
             });
         }
         else
@@ -51,15 +62,14 @@ export default function AutoComplete({ suggestionsProp, onSubmit, APIdata, setAP
             showSuggestions: false,
             userInput: e.target.value
         });
-        onSubmit();
+        setSearchFormSubmitted(true);
+        onSubmit(e);
+
     }
     
     const onKeyDown = e => {
         let newActiveSuggestion = suggestionState.activeSuggestion;
         let newFilteredSuggestions = suggestionState.filteredSuggestions;
-        let newUserInput = suggestionState.userInput;
-
-        console.log(newActiveSuggestion+" / "+newFilteredSuggestions.length);
         if (e.keyCode === 13) { //check if user pressed the 'enter' key.
             setSuggestionState({
                 activeSuggestion: newActiveSuggestion,
@@ -67,9 +77,10 @@ export default function AutoComplete({ suggestionsProp, onSubmit, APIdata, setAP
                 filteredSuggestions: newFilteredSuggestions,
                 userInput: newFilteredSuggestions[newActiveSuggestion]
             });
+            setUserQuery(newFilteredSuggestions[newActiveSuggestion]);
         }
         else if (e.keyCode === 38) { //otherwise, check if the user pressed the 'Up arrow' key.
-            if (newActiveSuggestion == 0) {return;}
+            if (newActiveSuggestion === 0) {return;}
             setSuggestionState({
                 ...suggestionState,
                 activeSuggestion: newActiveSuggestion - 1,
@@ -87,7 +98,6 @@ export default function AutoComplete({ suggestionsProp, onSubmit, APIdata, setAP
     }
 
     useEffect(() => {
-        console.log(suggestionListElement.current);
     },[suggestionListElement])
     return (
         <>
@@ -107,7 +117,7 @@ export default function AutoComplete({ suggestionsProp, onSubmit, APIdata, setAP
                             if (index===suggestionState.activeSuggestion) {
                                 classname = "suggestion-active";
                             }
-                            if (suggestionState.filteredSuggestions[index] != suggestionState.filteredSuggestions[index-1])
+                            if (suggestionState.filteredSuggestions[index] !== suggestionState.filteredSuggestions[index-1])
                             {
                                 return (
                                     <li className={classname} key={suggestion} onClick={onClickedSuggestion}>
@@ -115,6 +125,7 @@ export default function AutoComplete({ suggestionsProp, onSubmit, APIdata, setAP
                                     </li>
                                 );
                             }
+                            else {return '';}
                         })               
                         :    ''
                     

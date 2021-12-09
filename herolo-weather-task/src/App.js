@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import Searchbar from './components/Searchbar/Searchbar'
+import MainCityCard from './components/MainCityCard/MainCityCard';
 import { useEffect, useState } from 'react';
 //these are the parameters i used for the offline json data
 //autocomplete query word: 'israel'
@@ -10,11 +11,25 @@ import { useEffect, useState } from 'react';
 
 export function Homepage() {
   const [userQuery, setUserQuery] = useState(''); //This is what the user types in the searchbar input.
+  const [isSearchFormSubmitted, setSearchFormSubmitted] = useState(false);
+  const [mainCity, setMainCity] = useState('')
   const [APIdata, setAPIdata] = useState({
-    locations: null,
+    locations: [],
     currentWeather: null,
-    fiveDayForecast: null
+    fiveDayForecast: null,
+    locationKeys: []
   });
+
+  const onInputFieldChanged = (newQuery) => {
+    setUserQuery(newQuery)
+}
+
+  const onInputSubmitted = (event) => {
+    console.log(event);
+    event.preventDefault();
+    setSearchFormSubmitted(true);
+    console.log("user final query: "+userQuery);
+  }
   // useEffect(() => {
   //   console.log(process.env.REACT_APP_API_KEY);
 
@@ -22,7 +37,16 @@ export function Homepage() {
   return (
     <div className="App">
       
-      <Searchbar userQuery={userQuery} setUserQuery={setUserQuery} APIdata={APIdata} setAPIdata={setAPIdata}/>
+      <Searchbar 
+        userQuery={userQuery} 
+        setUserQuery={setUserQuery} 
+        APIdata={APIdata} 
+        setAPIdata={setAPIdata} 
+        onInputSubmitted={onInputSubmitted}
+        isSearchFormSubmitted={isSearchFormSubmitted}
+        setSearchFormSubmitted={setSearchFormSubmitted}
+        />
+         {(isSearchFormSubmitted && userQuery.length) ? <MainCityCard MainCityName={userQuery} locationKey={APIdata.locationKeys[0] ? APIdata.locationKeys[0] : null}/>   : ''}
     </div>
   );
 }

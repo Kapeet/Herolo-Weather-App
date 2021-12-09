@@ -1,0 +1,45 @@
+.div {
+    border: 1px solid #999;
+    border-radius: 10px;
+    width: 50%;
+    margin: auto;
+    margin-top: 1.5rem;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    justify-content: center;
+
+}
+.buttons {
+    justify-content: end;
+    display: flex;
+}
+.profile {
+    display: block;
+}
+.buttons, .profile {
+ 
+    padding: 15px;
+    width: 50%;
+}
+.forecast-text {
+    width: 50%;
+    margin: auto;   
+    color: #212121 !important;
+    font-weight: 400;
+}
+
+.profile h2, p{
+    width: 25%;
+    padding: 10px;
+}
+
+.buttons button {
+    width: 25%;
+    padding: 15px;
+    margin: 10px;
+
+}
