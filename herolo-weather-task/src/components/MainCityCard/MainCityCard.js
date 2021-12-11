@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './MainCityCard.css'
 
+import { useDispatch } from 'react-redux';
+import { addCityToFavorites } from '../../redux/features/favorites/favoriteSlice'
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 export default function MainCityCards({MainCityName, locationKey}){
-    // console.log(APIdata);
+    const dispatch = useDispatch(); 
+
     const [weatherData,setWeatherData] = useState({
         text: '',
-        temperature: '',
+        temperatureMetric: '',
     });
     const [fiveDayForecast, setForecast] = useState([]);
 
@@ -19,22 +22,19 @@ export default function MainCityCards({MainCityName, locationKey}){
                 text: data[0].WeatherText,
                 temperatureMetric: data[0].Temperature.Metric.Value + ' ' + data[0].Temperature.Metric.Unit
             });
-            console.log(weatherData);
         })
         .catch(() => setWeatherData({
             text: 'API Limit Reached, try again later.',
-            temperatureMetric: ''
+            temperatureMetric: '00C'
         }))
 
         //fetch five day forecast
         fetch(`http://dataservice.accuweather.com//forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`)
         .then(response => response.json())
         .then(data => {
-            // console.log(data);
             let newForecast = data.DailyForecasts.map(item => {
                 let date = new Date(item.Date);
                 let weekdayIndex = date.getDay(); //convert the date to the day of the week as a number
-                console.log(date);
                 return {
                     day: weekday[weekdayIndex],
                     temperatureMax: item.Temperature.Maximum.Value+' '+item.Temperature.Maximum.Unit,
@@ -43,22 +43,27 @@ export default function MainCityCards({MainCityName, locationKey}){
             });
             
             setForecast(newForecast);
-            // console.log(simplifiedDates);
-            console.log(fiveDayForecast);
         })
         .catch(() => setForecast([]))
-    },[])
+    },[]);
     return (
         <div className="div">
             <header>
-                <img />
                 <div className="profile">
                     <h2>{MainCityName}</h2>
                     <p>{weatherData.temperatureMetric ? weatherData.temperatureMetric : '' }</p>
                 </div>
                 <div className="buttons">
-                    <button>like</button>
-                    <button>favorite</button>
+                    <button><img src="/heart.svg" alt="Like Button"/></button>
+                    <button onClick={() => {
+                     let object = {
+                         name: MainCityName,
+                         temp: weatherData.temperatureMetric,
+                         text: weatherData.text
+                     }
+                     alert(MainCityName+" Has been added to Favorites!");
+                     dispatch(addCityToFavorites(object))
+                    }}>Add to Favorites</button>
                 </div>
             </header>
             <h1 className="forecast-text">{weatherData.text ? weatherData.text : ''}</h1>

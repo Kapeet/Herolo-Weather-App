@@ -4,7 +4,7 @@ import './navbar.css'
 
 export default function Navbar(){
     return (
-      <nav >
+      <nav className="nav-ul">
         <h1>Herolo Weather Task</h1>
         <ul>
           <li><Link to="/">Home</Link></li>

@@ -1,5 +1,6 @@
 nav {
-    background: linear-gradient(90deg, #189ab4 10%, #75e6da 90% );
+    /* background: linear-gradient(90deg, #189ab4 10%, #75e6da 90% ); */
+    background: #001920;
     height: 80px;
     width: 100%;
     display: flex;
@@ -18,12 +19,19 @@ h1, a {
     text-align: center;
 }
 a:hover {
-    color: #212121;
-    /* font-size: 2.5rem; */
+    /* color: #212121; */
+    font-weight: 800;
 }
-ul li {
+.nav-ul li {
     color: white;
     padding: 10px;
+    margin-left: 20px;
+    width: 20%;
+}
+.nav-ul ul {
+    display: flex;
+    width: 50%;
+    margin: 0;
 }
 ul {
     display: grid;

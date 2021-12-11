@@ -12,6 +12,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
     const onChange = e => {
                 
         let newUserInput = e.target.value;
+        setUserQuery(newUserInput);
         if (newUserInput.length > 0)
         {
             fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`)
@@ -38,7 +39,6 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
                         showSuggestions: true,
                         userInput: newUserInput
                     });
-                    setUserQuery(newUserInput);
                 }
             });
         }
@@ -48,7 +48,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
             setSuggestionState({
                 activeSuggestion: 0,
                 filteredSuggestions: [],
-                showSuggestions: true,
+                showSuggestions: false,
                 userInput: newUserInput
             });
         }
@@ -64,6 +64,8 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
                 showSuggestions: false,
                 userInput: e.target.value
             });
+            setSearchFormSubmitted(true);
+            onSubmit(e);
         }
         else
         {
@@ -72,23 +74,24 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
                 showSuggestions: false,
             });
         }
-        
-        setSearchFormSubmitted(true);
-        onSubmit(e);
-
+      
     }
     
     const onKeyDown = e => {
         let newActiveSuggestion = suggestionState.activeSuggestion;
         let newFilteredSuggestions = suggestionState.filteredSuggestions;
         if (e.keyCode === 13) { //check if user pressed the 'enter' key.
-            setSuggestionState({
-                activeSuggestion: newActiveSuggestion,
-                showSuggestions: false,
-                filteredSuggestions: newFilteredSuggestions,
-                userInput: newFilteredSuggestions[newActiveSuggestion]
-            });
-            setUserQuery(newFilteredSuggestions[newActiveSuggestion]);
+            let selectedSuggestion = newFilteredSuggestions[newActiveSuggestion];
+            if (selectedSuggestion)
+            {
+                setSuggestionState({
+                    activeSuggestion: newActiveSuggestion,
+                    showSuggestions: false,
+                    filteredSuggestions: newFilteredSuggestions,
+                    userInput: selectedSuggestion
+                });
+                setUserQuery(selectedSuggestion);
+            }
         }
         else if (e.keyCode === 38) { //otherwise, check if the user pressed the 'Up arrow' key.
             if (newActiveSuggestion === 0) {return;}
@@ -112,7 +115,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
     },[suggestionListElement])
     return (
         <>
-            <input 
+            <input className="autocomplete-input"
                 type="text"
                 onChange={onChange}
                 onKeyDown={onKeyDown}

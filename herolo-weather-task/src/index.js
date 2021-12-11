@@ -5,15 +5,21 @@ import {Homepage, Favorites} from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar/navbar'
+// import { useSelector,useDispatch } from 'react-redux';
+// import { addCityToFavorites } from '../redux/features/favorites/favoriteSlice'
 
+import { store } from './redux/app/store'
+import { Provider } from 'react-redux'
 ReactDOM.render(
+  <Provider store={store}>
   <BrowserRouter>
   <Navbar />
     <Routes>
       <Route exact path="/" element={<Homepage />} />
       <Route path="/favorites" element={<Favorites />} />
     </Routes>
-  </BrowserRouter>,
+  </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 );
 

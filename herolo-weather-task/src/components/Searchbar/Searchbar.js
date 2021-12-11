@@ -9,6 +9,7 @@ export default function Search({userQuery, setUserQuery, APIdata, setAPIdata, on
             <label htmlFor="header-search">
                 <span className="input-label-span">Search a city...</span>
             </label>
+            <button classname="searchbtn" type="submit"><img src="/search.svg" alt="Search" /></button>
             <AutoComplete 
                 userQuery={userQuery} 
                 setUserQuery={setUserQuery}
@@ -19,7 +20,6 @@ export default function Search({userQuery, setUserQuery, APIdata, setAPIdata, on
                 isSearchFormSubmitted={isSearchFormSubmitted}
                 setSearchFormSubmitted={setSearchFormSubmitted}
                 />
-            <button type="submit">Search</button>
         </form>
     )
 }
