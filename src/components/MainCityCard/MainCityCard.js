@@ -68,8 +68,7 @@ export default function MainCityCards({MainCityName, locationKey}){
             </header>
             <h1 className="forecast-text">{weatherData.text ? weatherData.text : ''}</h1>
             <ul className="cityList">
-                {fiveDayForecast.map((forecast, index) => {
-                    console.log(forecast);
+                {fiveDayForecast.map(forecast => {
                     return (
                         <li>
                             <div>

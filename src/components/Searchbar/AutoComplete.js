@@ -1,6 +1,6 @@
 import { React, useEffect, useRef, useState } from "react"
 import './Autocomplete.css'
-export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp, onSubmit, APIdata, setAPIdata, isSearchFormSubmitted, setSearchFormSubmitted}) {
+export default function AutoComplete({ setUserQuery, onSubmit, setAPIdata, setSearchFormSubmitted}) {
     const suggestionListElement = useRef(null);
 
     const [suggestionState, setSuggestionState] = useState({
@@ -15,6 +15,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
         setUserQuery(newUserInput);
         if (newUserInput.length > 0)
         {
+            setSearchFormSubmitted(false);
             fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`)
             .then(response => response.json())
             .then(data => {

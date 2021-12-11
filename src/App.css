@@ -46,7 +46,9 @@ body {
 .favorites-list li {
   border: 1px solid #212121;
   border-radius: 25px;
-  width: 10%;
+  width: 15%;
+  background: aliceblue;
+  padding: 10px;
 }
 .favorites-list h1, .favorites-list p {
   color: #212121;

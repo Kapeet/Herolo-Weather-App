@@ -4,7 +4,7 @@
     width: 50%;
     margin: auto;
     margin-top: 1.5rem;
-    background: #fff;
+    background: aliceblue;
 }
 
 header {
@@ -71,10 +71,14 @@ header {
 .cityList h1 {
     font-size: 1.5rem;
 }
-
+.cityList p {
+    width: 100%;
+    padding: 0;
+}
 .cityList li {
     border: 1px solid #212121;
     border-radius: 15px;
     padding: 10px;
     width: 15%;
+    background: #fff;
 }

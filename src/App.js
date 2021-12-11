@@ -16,16 +16,12 @@ export function Homepage() {
   const [isSearchFormSubmitted, setSearchFormSubmitted] = useState(false);
   const [APIdata, setAPIdata] = useState({
     locations: [],
-    currentWeather: null,
-    fiveDayForecast: null,
     locationKeys: []
   });
 
   const onInputSubmitted = (event) => {
-    console.log(event);
     event.preventDefault();
     setSearchFormSubmitted(true);
-    console.log("user final query: "+userQuery);
   }
 
   return (
