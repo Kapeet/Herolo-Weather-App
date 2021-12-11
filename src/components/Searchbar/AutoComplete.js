@@ -16,7 +16,7 @@ export default function AutoComplete({ setUserQuery, onSubmit, setAPIdata, setSe
         if (newUserInput.length > 0)
         {
             setSearchFormSubmitted(false);
-            fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`)
+            fetch(`https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`)
             .then(response => response.json())
             .then(data => {
                 let APIlocations = data.map(item => {return item.LocalizedName});

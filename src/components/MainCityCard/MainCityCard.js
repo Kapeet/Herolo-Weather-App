@@ -15,7 +15,7 @@ export default function MainCityCards({MainCityName, locationKey}){
 
     useEffect(() => {
         //fetch weather data
-        fetch(`http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`)
+        fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`)
         .then(response => response.json())
         .then(data => {
             setWeatherData({
@@ -29,7 +29,7 @@ export default function MainCityCards({MainCityName, locationKey}){
         }))
 
         //fetch five day forecast
-        fetch(`http://dataservice.accuweather.com//forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`)
+        fetch(`https://dataservice.accuweather.com//forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`)
         .then(response => response.json())
         .then(data => {
             let newForecast = data.DailyForecasts.map(item => {
