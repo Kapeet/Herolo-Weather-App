@@ -70,7 +70,7 @@ export default function MainCityCards({MainCityName, locationKey}){
             <ul className="cityList">
                 {fiveDayForecast.map(forecast => {
                     return (
-                        <li>
+                        <li key={forecast.day}>
                             <div>
 
                             <h1>{forecast.day}</h1>
