@@ -43,3 +43,30 @@ header {
     margin: 10px;
 
 }
+
+.cityList {
+    margin: auto;
+    padding: 0;
+    padding-top: 25px;
+    padding-bottom: 10px;
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    width: 100%;
+}
+.cityList li, .cityList h1{
+    color: #212121 !important;
+    white-space: nowrap;
+    margin: auto;
+}
+
+.cityList h1 {
+    font-size: 1.5rem;
+}
+
+.cityList li {
+    border: 1px solid #212121;
+    border-radius: 15px;
+    padding: 10px;
+    width: 15%;
+}

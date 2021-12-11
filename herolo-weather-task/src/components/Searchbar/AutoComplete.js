@@ -10,7 +10,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
         userInput: ""
     });
     const onChange = e => {
-        setSearchFormSubmitted(false);
+                
         let newUserInput = e.target.value;
         if (newUserInput.length > 0)
         {
@@ -44,6 +44,7 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
         }
         else
         {
+            setSearchFormSubmitted(false);
             setSuggestionState({
                 activeSuggestion: 0,
                 filteredSuggestions: [],
@@ -56,11 +57,22 @@ export default function AutoComplete({ userQuery, setUserQuery, suggestionsProp,
     };
 
     const onClickedSuggestion = e => {
-        setSuggestionState({
-            activeSuggestion: 0,
-            showSuggestions: false,
-            userInput: e.target.value
-        });
+        if (e.target.value)
+        {
+            setSuggestionState({
+                activeSuggestion: 0,
+                showSuggestions: false,
+                userInput: e.target.value
+            });
+        }
+        else
+        {
+            setSuggestionState({
+                activeSuggestion: 0,
+                showSuggestions: false,
+            });
+        }
+        
         setSearchFormSubmitted(true);
         onSubmit(e);
 
