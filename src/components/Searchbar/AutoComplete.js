@@ -150,8 +150,8 @@ export default function AutoComplete({userQuery, setUserQuery, onSubmit, APIdata
         }
     }
 
-    useEffect(() => {
-    },[suggestionListElement])
+    // useEffect(() => {
+    // },[suggestionListElement])
     return (
         <>
             <input className="autocomplete-input"

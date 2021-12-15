@@ -23,11 +23,12 @@ export function Homepage() {
 
   const onInputSubmitted = (event) => {
     event.preventDefault();
-    let selectedCity = {            
+    let selectedCity = {
       name: userQuery,
       temperature: null,
       weatherText: null,
     };
+    console.log(APIdata);
     dispatch(displayCityInCard(selectedCity));
     setSearchFormSubmitted(true);
   }
@@ -44,7 +45,7 @@ export function Homepage() {
         isSearchFormSubmitted={isSearchFormSubmitted}
         setSearchFormSubmitted={setSearchFormSubmitted}
         />
-         <MainCityCard  MainCity={MainCity} locationKey={APIdata.locationKeys[0] ? APIdata.locationKeys[0] : '215854'}/> 
+         <MainCityCard MainCity={MainCity} locationKey={APIdata.locationKeys[0] ? APIdata.locationKeys[0] : '215854'}/> 
     </div>
   );
 }
