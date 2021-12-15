@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import './MainCityCard.css'
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addCityToFavorites } from '../../redux/features/favorites/favoriteSlice'
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-export default function MainCityCards({MainCityName, locationKey}){
+export default function MainCityCards({MainCity, locationKey}){
     const dispatch = useDispatch(); 
+    // const MainCity = useSelector((state) => state.favorites.selectedCity);
 
     const [weatherData,setWeatherData] = useState({
         text: '',
@@ -14,22 +15,32 @@ export default function MainCityCards({MainCityName, locationKey}){
     const [fiveDayForecast, setForecast] = useState([]);
 
     useEffect(() => {
-        //fetch weather data
-        fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`)
-        .then(response => response.json())
-        .then(data => {
+        if (!MainCity.temperature && !MainCity.weatherText)
+        {
+            //fetch weather data
+            fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`)
+            .then(response => response.json())
+            .then(data => {
+                setWeatherData({
+                    text: data[0].WeatherText,
+                    temperatureMetric: data[0].Temperature.Metric.Value + ' ' + data[0].Temperature.Metric.Unit
+                });
+            })
+            .catch(() => setWeatherData({
+                text: 'API Limit Reached, try again later.',
+                temperatureMetric: '00C'
+            }))
+        }
+        else 
+        {
             setWeatherData({
-                text: data[0].WeatherText,
-                temperatureMetric: data[0].Temperature.Metric.Value + ' ' + data[0].Temperature.Metric.Unit
-            });
-        })
-        .catch(() => setWeatherData({
-            text: 'API Limit Reached, try again later.',
-            temperatureMetric: '00C'
-        }))
+                text: MainCity.weatherText,
+                temperatureMetric: MainCity.temperature
+            })
+        }
 
         //fetch five day forecast
-        fetch(`https://dataservice.accuweather.com//forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`)
+        fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`)
         .then(response => response.json())
         .then(data => {
             let newForecast = data.DailyForecasts.map(item => {
@@ -45,29 +56,28 @@ export default function MainCityCards({MainCityName, locationKey}){
             setForecast(newForecast);
         })
         .catch(() => setForecast([]))
-    },[]);
+    },[MainCity]);
     return (
         <div className="div">
-            <header>
+            <header className="header">
                 <div className="profile">
-                    <h2>{MainCityName}</h2>
+                    <h2>{MainCity.name}</h2>
                     <p>{weatherData.temperatureMetric ? weatherData.temperatureMetric : '' }</p>
                 </div>
                 <div className="buttons">
                     <button><img src="/heart.svg" alt="Like Button"/></button>
                     <button onClick={() => {
                      let object = {
-                         name: MainCityName,
+                         name: MainCity.name,
                          temp: weatherData.temperatureMetric,
                          text: weatherData.text
                      }
-                     alert(MainCityName+" Has been added to Favorites!");
                      dispatch(addCityToFavorites(object))
                     }}>Add to Favorites</button>
                 </div>
             </header>
             <h1 className="forecast-text">{weatherData.text ? weatherData.text : ''}</h1>
-            <ul className="cityList">
+            <ul className="forecastList">
                 {fiveDayForecast.map(forecast => {
                     return (
                         <li key={forecast.day}>

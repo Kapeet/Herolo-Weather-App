@@ -1,47 +1,76 @@
 import { React, useEffect, useRef, useState } from "react"
+import { useDispatch } from "react-redux";
 import './Autocomplete.css'
-export default function AutoComplete({ setUserQuery, onSubmit, setAPIdata, setSearchFormSubmitted}) {
+import { displayCityInCard } from "../../redux/features/favorites/favoriteSlice";
+export default function AutoComplete({userQuery, setUserQuery, onSubmit, APIdata, setAPIdata, setSearchFormSubmitted}) {
+    const dispatch = useDispatch();
     const suggestionListElement = useRef(null);
-
+    const [isAPIretrieved, setAPIretrieved] = useState(false);
     const [suggestionState, setSuggestionState] = useState({
         activeSuggestion: 0,
         filteredSuggestions: [],
         showSuggestions: false,
         userInput: ""
     });
-    const onChange = e => {
-                
+
+    const handleSuggestionState = (newUserInput, locations) => {
+        let copiedFilteredSuggestions = locations.filter(suggestion => suggestion.toLowerCase().indexOf(newUserInput.toLowerCase()) > -1); //filter suggestions based on user input
+        let uniqueSuggestions = copiedFilteredSuggestions.filter((item, index) => {return copiedFilteredSuggestions.indexOf(item) === index;}); //remove duplicate suggestions from the original array
+        setSuggestionState({
+            activeSuggestion: 0,
+            filteredSuggestions: uniqueSuggestions,
+            showSuggestions: true,
+            userInput: newUserInput
+        });
+    }
+    const onChange = async e => {
         let newUserInput = e.target.value;
         setUserQuery(newUserInput);
         if (newUserInput.length > 0)
         {
             setSearchFormSubmitted(false);
-            fetch(`https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`)
-            .then(response => response.json())
-            .then(data => {
-                let APIlocations = data.map(item => {return item.LocalizedName});
-                let APIlocationKeys = data.map(item => {return item.Key});
-
-                if (APIlocations != null)
+            if (isAPIretrieved)
+            {
+                if (APIdata.locations != null)
                 {
+                    handleSuggestionState(newUserInput, APIdata.locations)
+                }
+            }
+            else
+            {
+                await fetch(`https://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=${process.env.REACT_APP_API_KEY}&q=${newUserInput}`,)
+                .then(response => response.json())
+                .then(data => {
+                    let APIlocations = data.map(item => {return item.LocalizedName});
+                    let APIlocationKeys = data.map(item => {return item.Key});
+    
+                    if (APIlocations != null)
+                    {
+                        setAPIdata({
+                            locations: APIlocations,
+                            locationKeys: APIlocationKeys
+                        });
+                        
+                        handleSuggestionState(newUserInput, APIlocations)
+                    }
+                })
+                .catch((err) => {
                     setAPIdata({
-                        locations: APIlocations,
-                        currentWeather: null,
-                        fiveDayForecast: null,
-                        locationKeys: APIlocationKeys
+                        locations: [],
+                        locationKeys: [],
                     });
-
-                    
-                    let copiedFilteredSuggestions = APIlocations.filter(suggestion => suggestion.toLowerCase().indexOf(newUserInput.toLowerCase()) > -1); //filter suggestions based on user input
-                    let uniqueSuggestions = copiedFilteredSuggestions.filter((item, index) => {return copiedFilteredSuggestions.indexOf(item) === index;}); //remove duplicate suggestions from the original array
                     setSuggestionState({
                         activeSuggestion: 0,
-                        filteredSuggestions: uniqueSuggestions,
-                        showSuggestions: true,
+                        filteredSuggestions: [],
+                        showSuggestions: false,
                         userInput: newUserInput
                     });
                 }
-            });
+                );
+            }
+            setAPIretrieved(!isAPIretrieved); //set api to be called in every 2nd change, to reduce overall api calls.
+
+            
         }
         else
         {
@@ -58,15 +87,18 @@ export default function AutoComplete({ setUserQuery, onSubmit, setAPIdata, setSe
     };
 
     const onClickedSuggestion = e => {
-        if (e.target.value)
+        let selectedSuggestion = e.target.value;
+        if (selectedSuggestion)
         {
             setSuggestionState({
                 activeSuggestion: 0,
                 showSuggestions: false,
-                userInput: e.target.value
+                userInput: selectedSuggestion
             });
             setSearchFormSubmitted(true);
+
             onSubmit(e);
+
         }
         else
         {
@@ -91,7 +123,13 @@ export default function AutoComplete({ setUserQuery, onSubmit, setAPIdata, setSe
                     filteredSuggestions: newFilteredSuggestions,
                     userInput: selectedSuggestion
                 });
-                setUserQuery(selectedSuggestion);
+                setUserQuery(selectedSuggestion);  
+                let selectedCity = {            
+                    name: selectedSuggestion,
+                    temperature: null,
+                    weatherText: null,
+                };
+                dispatch(displayCityInCard(selectedCity));
             }
         }
         else if (e.keyCode === 38) { //otherwise, check if the user pressed the 'Up arrow' key.
@@ -120,7 +158,7 @@ export default function AutoComplete({ setUserQuery, onSubmit, setAPIdata, setSe
                 type="text"
                 onChange={onChange}
                 onKeyDown={onKeyDown}
-                value={suggestionState.userInput}
+                value={userQuery}
                 placeholder="Tel aviv"
                 />
                 <ul className="suggestions" ref={suggestionListElement}>

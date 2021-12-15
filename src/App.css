@@ -7,6 +7,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover; 
+  background-repeat: no-repeat;
   
 }
 .App-logo {
@@ -43,12 +44,13 @@ body {
 .favoritesHeader h1 {
   color: #212121;
 }
-.favorites-list li {
+.favorites-list a {
   border: 1px solid #212121;
   border-radius: 25px;
   width: 15%;
   background: aliceblue;
   padding: 10px;
+  cursor: pointer;
 }
 .favorites-list h1, .favorites-list p {
   color: #212121;

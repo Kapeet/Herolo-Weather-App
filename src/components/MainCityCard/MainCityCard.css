@@ -1,13 +1,13 @@
 .div {
     border: 1px solid #999;
-    border-radius: 10px;
+    border-radius: 0.5em;
     width: 50%;
     margin: auto;
     margin-top: 1.5rem;
     background: aliceblue;
 }
 
-header {
+.header {
     display: flex;
     flex-direction: row;
     /* align-items: center; */
@@ -23,7 +23,7 @@ header {
 }
 .buttons, .profile {
  
-    padding: 15px;
+    padding: 1em;
     width: 50%;
 }
 .forecast-text {
@@ -31,17 +31,18 @@ header {
     margin: auto;   
     color: #212121 !important;
     font-weight: 400;
+    font-size: 2em;
 }
 
 .profile h2, p{
     width: 25%;
-    padding: 10px;
+    padding: 0.5em;
 }
 
 .buttons button {
     width: 25%;
-    padding: 15px;
-    margin: 10px;
+    padding: 1em;
+    margin: 1em;
     background: none;
 	color: inherit;
 	border: none;
@@ -52,33 +53,60 @@ header {
 
 }
 
-.cityList {
+.forecastList {
     margin: auto;
     padding: 0;
-    padding-top: 25px;
-    padding-bottom: 10px;
+    padding-top: 1.5em;
+    padding-bottom: 1em;
     justify-content: center;
     text-align: center;
     display: flex;
     width: 100%;
 }
-.cityList li, .cityList h1{
+.forecastList li, .forecastList h1{
     color: #212121 !important;
     white-space: nowrap;
     margin: auto;
 }
 
-.cityList h1 {
+.forecastList h1 {
     font-size: 1.5rem;
 }
-.cityList p {
+.forecastList p {
     width: 100%;
     padding: 0;
 }
-.cityList li {
+.forecastList li {
     border: 1px solid #212121;
-    border-radius: 15px;
-    padding: 10px;
+    border-radius: 0.5em;
+    padding: 0.5em;
     width: 15%;
     background: #fff;
+}
+
+
+@media (max-width: 960px) {
+    .header {
+        display: block;
+    }
+    .header div {
+        font-size: 1em;
+        margin: auto;
+    }
+    .header h2, .header p {
+        margin: auto;
+        width: fit-content;
+
+    }
+    .forecastList h1 {
+        font-size: 1.5em;
+    }
+    .forecastList {
+        display: block;
+    }
+    .forecastList li {
+        width: 75%;
+        margin: 1em auto;
+        
+    }
 }

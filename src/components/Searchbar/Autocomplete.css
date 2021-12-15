@@ -14,7 +14,7 @@
 .suggestions li {
     color: #212121;
     padding: 0.5rem;
-    border-radius: 25px;
+    border-radius: 1em;
 }
 h1 {
     color: #212121;
@@ -22,7 +22,7 @@ h1 {
 .suggestions {
     border: 1px solid #999;
     border-top-width: 0;
-    border-radius: 15px;
+    border-radius: 0.5em;
     list-style: none;
     margin-top: 1.5rem;
     /* max-height: 20%; */
@@ -43,5 +43,5 @@ h1 {
 	font: inherit;
 	outline: inherit;
     text-decoration: none !important;
-    padding-left: 15px;
+    padding-left: 1em;
 }

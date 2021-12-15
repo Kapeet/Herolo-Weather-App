@@ -1,4 +1,4 @@
-nav {
+.nav-ul {
     /* background: linear-gradient(90deg, #189ab4 10%, #75e6da 90% ); */
     background: #001920;
     height: 80px;
@@ -12,20 +12,30 @@ nav {
 }
 h1, a {
     color: #fff;
-    font-size: 2rem;
+    font-size: 2em;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 400;
     text-decoration: none;
     text-align: center;
+
+    font-size: 1em;
+}
+.nav-ul a {
+    color: #fff;
+    font-size: 1em;
+    transition: 0.5s ease-out;
+    margin: auto;
 }
 a:hover {
-    /* color: #212121; */
-    font-weight: 800;
+    color: cyan;
+    font-size: 1.2em;
+    /* font-weight: 800; */
 }
 .nav-ul li {
     color: white;
     padding: 10px;
-    margin-left: 20px;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
     width: 20%;
 }
 .nav-ul ul {
@@ -42,4 +52,28 @@ ul {
     justify-content: end;
     width: 70vw;
     margin-right: 2em;
+}
+
+@media (max-width: 960px) {
+    .nav-ul {
+        /* background: linear-gradient(90deg, #189ab4 10%, #75e6da 90% ); */
+        background: #001920;
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        /* position: absolute; */
+    }
+    .nav-ul ul {
+        justify-content: center;
+
+    }
+
+    .nav-ul h1, .nav-ul a {
+        font-size: 1em;
+        padding: 0;
+        margin: 0;
+    }
 }
