@@ -5,6 +5,7 @@ const initialState = {
   cities: [],
   selectedCity: {
     name: 'Tel Aviv',
+    locationKey: '215854',
     temperature: null,
     weatherText: null
   }
@@ -17,7 +18,7 @@ export const favoriteSlice = createSlice({
         if (action.type === "favorites/addCityToFavorites")
         {
             let copiedValue = state.cities;
-            let cityAlreadyExists = copiedValue.find(city => city.name == action.payload.name)
+            let cityAlreadyExists = copiedValue.find(city => city.name === action.payload.name)
             if (cityAlreadyExists)
             {
                 alert(action.payload.name+" Is already favorited!");

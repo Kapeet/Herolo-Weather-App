@@ -124,12 +124,13 @@ export default function AutoComplete({userQuery, setUserQuery, onSubmit, APIdata
                     userInput: selectedSuggestion
                 });
                 setUserQuery(selectedSuggestion);  
-                let selectedCity = {            
-                    name: selectedSuggestion,
-                    temperature: null,
-                    weatherText: null,
-                };
-                dispatch(displayCityInCard(selectedCity));
+                // let selectedCity = {            
+                //     name: selectedSuggestion,
+                //     locationKey: 
+                //     temperature: null,
+                //     weatherText: null,
+                // };
+                // dispatch(displayCityInCard(selectedCity));
             }
         }
         else if (e.keyCode === 38) { //otherwise, check if the user pressed the 'Up arrow' key.

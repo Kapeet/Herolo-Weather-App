@@ -25,6 +25,7 @@ export function Homepage() {
     event.preventDefault();
     let selectedCity = {
       name: userQuery,
+      locationKey: APIdata.locationKeys[0],
       temperature: null,
       weatherText: null,
     };
@@ -45,7 +46,7 @@ export function Homepage() {
         isSearchFormSubmitted={isSearchFormSubmitted}
         setSearchFormSubmitted={setSearchFormSubmitted}
         />
-         <MainCityCard MainCity={MainCity} locationKey={APIdata.locationKeys[0] ? APIdata.locationKeys[0] : '215854'}/> 
+         <MainCityCard MainCity={MainCity} locationKey={MainCity.locationKey ? MainCity.locationKey : '215854'}/> 
     </div>
   );
 }
@@ -61,10 +62,12 @@ export function Favorites() {
       </header>
       <ul className="favorites-list">
       {favorites.map(city => {
+        console.log(city);
         return (
           <Link key={city.name} to="/" onClick={() => {
               let selectedCity = {            
                 name: city.name,
+                locationKey: city.locationKey,
                 temperature: city.temp,
                 weatherText: city.text
               };

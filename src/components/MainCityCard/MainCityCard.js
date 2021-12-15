@@ -15,21 +15,50 @@ export default function MainCityCards({MainCity, locationKey}){
     const [fiveDayForecast, setForecast] = useState([]);
 
     useEffect(() => {
+        const abortController = new AbortController();
         if (!MainCity.temperature && !MainCity.weatherText)
         {
             //fetch weather data
-            fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`)
-            .then(response => response.json())
-            .then(data => {
-                setWeatherData({
-                    text: data[0].WeatherText,
-                    temperatureMetric: data[0].Temperature.Metric.Value + ' ' + data[0].Temperature.Metric.Unit
-                });
-            })
-            .catch(() => setWeatherData({
-                text: 'API Limit Reached, try again later.',
-                temperatureMetric: '00C'
-            }))
+            if (!MainCity.locationKey)
+            {
+                fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`, {signal: abortController.signal})
+                .then(response => response.json())
+                .then(data => {
+                    setWeatherData({
+                        text: data[0].WeatherText,
+                        temperatureMetric: data[0].Temperature.Metric.Value + ' ' + data[0].Temperature.Metric.Unit
+                    });
+                })
+                .catch(() => {
+                    if(!abortController.signal.aborted)
+                    {
+                        setWeatherData({
+                            text: 'API Limit Reached, try again later.',
+                            temperatureMetric: '00C'
+                        })
+                    }
+                })
+            }
+            else
+            {
+                fetch(`https://dataservice.accuweather.com/currentconditions/v1/${MainCity.locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true`, {signal: abortController.signal})
+                .then(response => response.json())
+                .then(data => {
+                    setWeatherData({
+                        text: data[0].WeatherText,
+                        temperatureMetric: data[0].Temperature.Metric.Value + ' ' + data[0].Temperature.Metric.Unit
+                    });
+                })
+                .catch(() => {
+                    if(!abortController.signal.aborted)
+                    {
+                        setWeatherData({
+                            text: 'API Limit Reached, try again later.',
+                            temperatureMetric: '00C'
+                        })
+                    }
+                })
+            }
         }
         else 
         {
@@ -39,23 +68,53 @@ export default function MainCityCards({MainCity, locationKey}){
             })
         }
 
-        //fetch five day forecast
-        fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`)
-        .then(response => response.json())
-        .then(data => {
-            let newForecast = data.DailyForecasts.map(item => {
-                let date = new Date(item.Date);
-                let weekdayIndex = date.getDay(); //convert the date to the day of the week as a number
-                return {
-                    day: weekday[weekdayIndex],
-                    temperatureMax: item.Temperature.Maximum.Value+' '+item.Temperature.Maximum.Unit,
-                    temperatureMin: item.Temperature.Minimum.Value+' '+item.Temperature.Minimum.Unit
-                }
-            });
-            
-            setForecast(newForecast);
-        })
-        .catch(() => setForecast([]))
+        console.log(MainCity);
+        if (!MainCity.locationKey)
+        {
+            //fetch five day forecast
+            fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`,{signal: abortController.signal})
+            .then(response => response.json())
+            .then(data => {
+                let newForecast = data.DailyForecasts.map(item => {
+                    let date = new Date(item.Date);
+                    let weekdayIndex = date.getDay(); //convert the date to the day of the week as a number
+                    return {
+                        day: weekday[weekdayIndex],
+                        temperatureMax: item.Temperature.Maximum.Value+' '+item.Temperature.Maximum.Unit,
+                        temperatureMin: item.Temperature.Minimum.Value+' '+item.Temperature.Minimum.Unit
+                    }
+                });
+                
+                setForecast(newForecast);
+            })
+            .catch(() => setForecast([]));
+        }
+        else
+        {
+            //fetch five day forecast
+            fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${MainCity.locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`,{signal: abortController.signal})
+            .then(response => response.json())
+            .then(data => {
+                console.log("data fetched with maincity locationkey");
+                let newForecast = data.DailyForecasts.map(item => {
+                    let date = new Date(item.Date);
+                    let weekdayIndex = date.getDay(); //convert the date to the day of the week as a number
+                    return {
+                        day: weekday[weekdayIndex],
+                        temperatureMax: item.Temperature.Maximum.Value+' '+item.Temperature.Maximum.Unit,
+                        temperatureMin: item.Temperature.Minimum.Value+' '+item.Temperature.Minimum.Unit
+                    }
+                });
+                
+                setForecast(newForecast);
+            })
+            .catch(() => setForecast([]));
+        }
+
+        return function cleanup() {
+            abortController.abort();
+        }
+        
     },[MainCity]);
     return (
         <div className="div">
@@ -69,6 +128,7 @@ export default function MainCityCards({MainCity, locationKey}){
                     <button onClick={() => {
                      let object = {
                          name: MainCity.name,
+                         locationKey: MainCity.locationKey,
                          temp: weatherData.temperatureMetric,
                          text: weatherData.text
                      }
