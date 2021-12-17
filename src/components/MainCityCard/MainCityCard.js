@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './MainCityCard.css'
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addCityToFavorites } from '../../redux/features/favorites/favoriteSlice'
+import { addCityToFavorites, displayCityInCard } from '../../redux/features/favorites/favoriteSlice'
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-export default function MainCityCards({MainCity, locationKey}){
+export default function MainCityCards({MainCity, locationKey, isLiked, setIsLiked}){
     const dispatch = useDispatch(); 
     // const MainCity = useSelector((state) => state.favorites.selectedCity);
 
@@ -16,7 +16,7 @@ export default function MainCityCards({MainCity, locationKey}){
 
     useEffect(() => {
         const abortController = new AbortController();
-        if (!MainCity.temperature && !MainCity.weatherText)
+        if (!MainCity.temperature && !MainCity.weatherText) 
         {
             //fetch weather data
             if (!MainCity.locationKey)
@@ -69,7 +69,7 @@ export default function MainCityCards({MainCity, locationKey}){
         }
 
         console.log(MainCity);
-        if (!MainCity.locationKey)
+        if (!MainCity.forecast.length)
         {
             //fetch five day forecast
             fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`,{signal: abortController.signal})
@@ -91,24 +91,7 @@ export default function MainCityCards({MainCity, locationKey}){
         }
         else
         {
-            //fetch five day forecast
-            fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${MainCity.locationKey}?apikey=${process.env.REACT_APP_API_KEY}&details=true&metric=true`,{signal: abortController.signal})
-            .then(response => response.json())
-            .then(data => {
-                console.log("data fetched with maincity locationkey");
-                let newForecast = data.DailyForecasts.map(item => {
-                    let date = new Date(item.Date);
-                    let weekdayIndex = date.getDay(); //convert the date to the day of the week as a number
-                    return {
-                        day: weekday[weekdayIndex],
-                        temperatureMax: item.Temperature.Maximum.Value+' '+item.Temperature.Maximum.Unit,
-                        temperatureMin: item.Temperature.Minimum.Value+' '+item.Temperature.Minimum.Unit
-                    }
-                });
-                
-                setForecast(newForecast);
-            })
-            .catch(() => setForecast([]));
+            setForecast(MainCity.forecast);
         }
 
         return function cleanup() {
@@ -116,6 +99,14 @@ export default function MainCityCards({MainCity, locationKey}){
         }
         
     },[MainCity]);
+    const handleLiked = () => {
+        setIsLiked(!isLiked);
+        let object = {
+            ...MainCity,
+            isLiked: isLiked
+        };
+        displayCityInCard(object);
+    };
     return (
         <div className="div">
             <header className="header">
@@ -124,13 +115,15 @@ export default function MainCityCards({MainCity, locationKey}){
                     <p>{weatherData.temperatureMetric ? weatherData.temperatureMetric : '' }</p>
                 </div>
                 <div className="buttons">
-                    <button><img src="/heart.svg" alt="Like Button"/></button>
+                    <button onClick={handleLiked}><img src={MainCity.isLiked != isLiked ? "heart-active.svg" : "/heart.svg"} alt="Like Button"/></button>
                     <button onClick={() => {
                      let object = {
                          name: MainCity.name,
                          locationKey: MainCity.locationKey,
                          temp: weatherData.temperatureMetric,
-                         text: weatherData.text
+                         text: weatherData.text,
+                         isLiked: isLiked,
+                         forecast: fiveDayForecast
                      }
                      dispatch(addCityToFavorites(object))
                     }}>Add to Favorites</button>

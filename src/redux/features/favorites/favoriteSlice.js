@@ -7,7 +7,9 @@ const initialState = {
     name: 'Tel Aviv',
     locationKey: '215854',
     temperature: null,
-    weatherText: null
+    weatherText: null,
+    isLiked: false,
+    forecast: [],
   }
 }
 export const favoriteSlice = createSlice({
@@ -18,19 +20,20 @@ export const favoriteSlice = createSlice({
         if (action.type === "favorites/addCityToFavorites")
         {
             let copiedValue = state.cities;
-            let cityAlreadyExists = copiedValue.find(city => city.name === action.payload.name)
+            let cityToAdd = action.payload;
+            let cityAlreadyExists = copiedValue.find(city => city.name === cityToAdd.name)
             if (cityAlreadyExists)
             {
-                alert(action.payload.name+" Is already favorited!");
+                alert(cityToAdd.name+" Is already favorited!");
             }
             else
             {
-              copiedValue.push(action.payload);
+              copiedValue.push(cityToAdd);
               state = {
                   ...state,
                   cities: copiedValue
               } 
-              alert(action.payload.name+" Has been added to Favorites!");
+              alert(cityToAdd.name+" Has been added to Favorites!");
             }
         }
     },
